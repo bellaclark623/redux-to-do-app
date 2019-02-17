@@ -26,6 +26,12 @@ const getPeople = () =>
     globalState => globalState.get("people").toJS()
   );
 
+const getTasks = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.get("tasks").toJS()
+  );
+
 const makeSelectError = () =>
   createSelector(
     selectGlobal,
@@ -51,5 +57,6 @@ export {
   makeSelectError,
   makeSelectRepos,
   makeSelectLocation,
-  getPeople
+  getPeople,
+  getTasks
 };

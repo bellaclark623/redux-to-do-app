@@ -6,9 +6,17 @@ import injectSaga from "utils/injectSaga";
 import {
   makeSelectLoading,
   makeSelectError,
-  getPeople
+  getPeople,
+  getTasks
 } from "containers/App/selectors";
-import { updateEditedPerson, updatePerson, deletePerson } from "../App/actions";
+import {
+  updateEditedPerson,
+  updatePerson,
+  updateTask,
+  deletePerson,
+  deleteTask,
+  updateEditedTask
+} from "../App/actions";
 // import { changeUsername } from "./actions";
 import { makeSelectUsername } from "./selectors";
 import reducer from "./reducer";
@@ -26,12 +34,24 @@ const mapDispatchToProps = dispatch => ({
       )
     ),
   handleEditedPersonOnSubmit: uuid => dispatch(updatePerson(uuid)),
-  handleDeletePersonOnClick: uuid => dispatch(deletePerson(uuid))
+  handleEditedTaskOnSubmit: uuid => dispatch(updateTask(uuid)),
+  handleDeletePersonOnClick: uuid => dispatch(deletePerson(uuid)),
+  handleDeleteTaskOnClick: uuid => dispatch(deleteTask(uuid)),
+  handleEditedTaskLabelOnChange: (editedLabel, uuid) =>
+    dispatch(
+      updateEditedTask(
+        {
+          label: editedLabel
+        },
+        uuid
+      )
+    )
 });
 
 const mapStateToProps = createStructuredSelector({
   // repos: makeSelectRepos(),
   people: getPeople(),
+  tasks: getTasks(),
   username: makeSelectUsername(),
   loading: makeSelectLoading(),
   error: makeSelectError()

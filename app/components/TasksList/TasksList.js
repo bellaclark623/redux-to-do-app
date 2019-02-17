@@ -4,10 +4,10 @@ import PropTypes from "prop-types";
 import List from "components/List";
 import ListItem from "components/ListItem";
 import LoadingIndicator from "components/LoadingIndicator";
-import PeopleListItem from "containers/PeopleListItem";
+import TasksListItem from "containers/TasksListItem";
 
-const PeopleList = props => {
-  const { loading, error, people } = props;
+const TasksList = props => {
+  const { loading, error, tasks } = props;
 
   if (loading) {
     return <List component={LoadingIndicator} />;
@@ -20,21 +20,21 @@ const PeopleList = props => {
     return <List component={ErrorComponent} />;
   }
 
-  return people && people.length ? (
+  return tasks && tasks.length ? (
     <List
-      items={people}
-      component={PeopleListItem}
+      items={tasks}
+      component={TasksListItem}
       listItemProps={{ ...props }}
     />
   ) : (
-    <section>There are no people added.</section>
+    <section>There are no tasks added.</section>
   );
 };
 
-PeopleList.propTypes = {
+TasksList.propTypes = {
   loading: PropTypes.bool,
   error: PropTypes.any,
   people: PropTypes.any
 };
 
-export default PeopleList;
+export default TasksList;
