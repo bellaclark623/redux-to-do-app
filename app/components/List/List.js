@@ -20,11 +20,11 @@ const List = ({ component, items, listItemProps }) => {
     content = <ComponentToRender />;
   }
 
-  return (
+  return items.length ? (
     <div className="list-wrapper">
       <ul>{content}</ul>
     </div>
-  );
+  ) : null;
 };
 
 List.propTypes = {

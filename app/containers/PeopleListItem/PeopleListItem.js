@@ -63,6 +63,12 @@ export default class PeopleListItem extends React.Component {
     handleEditedPersonOnSubmit(person.uuid);
   };
 
+  handleDeleteButtonOnClick = () => {
+    const { handleDeletePersonOnClick, item: person } = this.props;
+
+    handleDeletePersonOnClick(person.uuid);
+  };
+
   renderButtons() {
     const { editMode } = this.state;
 
@@ -88,7 +94,11 @@ export default class PeopleListItem extends React.Component {
         </button>
       );
 
-      conditionalButtons.push(<button key="delete">Delete</button>);
+      conditionalButtons.push(
+        <button key="delete" onClick={this.handleDeleteButtonOnClick}>
+          Delete
+        </button>
+      );
     }
 
     return <div className="buttons-wrapper">{conditionalButtons}</div>;

@@ -17,7 +17,8 @@ import {
   // LOAD_REPOS,
   // LOAD_REPOS_ERROR,
   UPDATE_EDITED_PERSON,
-  UPDATE_PERSON
+  UPDATE_PERSON,
+  DELETE_PERSON
 } from "./constants";
 
 // The initial state of the App
@@ -53,6 +54,7 @@ const initialState = fromJS({
 });
 
 function appReducer(state = initialState, action) {
+  // James Bond
   switch (action.type) {
     case UPDATE_EDITED_PERSON: {
       const {
@@ -87,10 +89,10 @@ function appReducer(state = initialState, action) {
           return item.get("uuid") === personToUpdateUuid; // find the person in the List you want to update
         }),
         function(item) {
-          const editedName = item.toJS().edited.name;
-          const itemWithEditedNameAsName = item.set("name", editedName); // update their edited.name data
+          const editedPerson = item.toJS().edited;
+          const personUpdatedByEditedPerson = item.merge(editedPerson); // update their edited.name data
 
-          return itemWithEditedNameAsName;
+          return personUpdatedByEditedPerson;
         }
       );
 
@@ -98,6 +100,30 @@ function appReducer(state = initialState, action) {
         .set("loading", false)
         .set("error", false)
         .set("people", updatedPeople);
+    }
+    case DELETE_PERSON: {
+      const {
+        payload: { uuid: personToDeleteUuid }
+      } = action; // const personToDeleteUuid = action.payload.uuid
+
+      const people = state.get("people");
+
+      const didFindPerson = people.find(function(person) {
+        return person.get("uuid") === personToDeleteUuid;
+      });
+
+      console.log(didFindPerson);
+
+      if (didFindPerson) {
+        const remainingPeople = people.filter(function(person) {
+          return person.get("uuid") !== personToDeleteUuid;
+        });
+
+        return state
+          .set("loading", false)
+          .set("error", false)
+          .set("people", remainingPeople);
+      }
     }
     // case LOAD_REPOS:
     //   return state

@@ -6,13 +6,9 @@ import ListItem from "components/ListItem";
 import LoadingIndicator from "components/LoadingIndicator";
 import PeopleListItem from "containers/PeopleListItem";
 
-const PeopleList = ({
-  loading,
-  error,
-  people,
-  handleEditedPersonNameOnChange,
-  handleEditedPersonOnSubmit
-}) => {
+const PeopleList = props => {
+  const { loading, error, people } = props;
+
   if (loading) {
     return <List component={LoadingIndicator} />;
   }
@@ -29,10 +25,7 @@ const PeopleList = ({
       <List
         items={people}
         component={PeopleListItem}
-        listItemProps={{
-          handleEditedPersonNameOnChange,
-          handleEditedPersonOnSubmit
-        }}
+        listItemProps={{ ...props }}
       />
     );
   }
