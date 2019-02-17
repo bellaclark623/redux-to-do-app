@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import List from "components/List";
 import ListItem from "components/ListItem";
 import LoadingIndicator from "components/LoadingIndicator";
-import PeopleListItem from "containers/PeopleListItem";
+import PeopleListItem from "components/PeopleListItem";
 
 const PeopleList = props => {
   const { loading, error, people } = props;

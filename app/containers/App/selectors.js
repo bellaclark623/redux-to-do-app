@@ -20,12 +20,6 @@ const makeSelectLoading = () =>
     globalState => globalState.get("loading")
   );
 
-const getPeople = () =>
-  createSelector(
-    selectGlobal,
-    globalState => globalState.get("people").toJS()
-  );
-
 const getTasks = () =>
   createSelector(
     selectGlobal,
@@ -57,6 +51,5 @@ export {
   makeSelectError,
   makeSelectRepos,
   makeSelectLocation,
-  getPeople,
   getTasks
 };

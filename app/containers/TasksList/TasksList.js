@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import List from "components/List";
 import ListItem from "components/ListItem";
 import LoadingIndicator from "components/LoadingIndicator";
-import TasksListItem from "containers/TasksListItem";
+import TasksListItem from "components/TasksListItem";
 
 const TasksList = props => {
   const { loading, error, tasks } = props;
