@@ -1,33 +1,35 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import './style.scss';
+import React from "react";
+import PropTypes from "prop-types";
+import "./style.scss";
 
-const List = ({ component, items }) => {
+const List = ({ component, items, listItemProps }) => {
   const ComponentToRender = component;
-  let content = (<div></div>);
+  let content = <div />;
 
   // If we have items, render them
   if (items) {
-    content = items.map((item) => (
-      <ComponentToRender key={`item-${item.id}`} item={item} />
+    content = items.map(item => (
+      <ComponentToRender
+        key={`item-${item.uuid}`}
+        item={item}
+        {...listItemProps}
+      />
     ));
   } else {
     // Otherwise render a single component
-    content = (<ComponentToRender />);
+    content = <ComponentToRender />;
   }
 
   return (
     <div className="list-wrapper">
-      <ul>
-        {content}
-      </ul>
+      <ul>{content}</ul>
     </div>
   );
 };
 
 List.propTypes = {
   component: PropTypes.func.isRequired,
-  items: PropTypes.array,
+  items: PropTypes.array
 };
 
 export default List;
