@@ -21,11 +21,7 @@ export default class PeopleListItem extends React.Component {
   };
 
   renderName() {
-    const {
-      item: person,
-      handleEditedPersonNameOnChange
-      // handleEditedPersonOnSubmit
-    } = this.props;
+    const { item: person, handleEditedPersonNameOnChange } = this.props;
     const { editMode } = this.state;
 
     if (editMode) {
@@ -46,6 +42,27 @@ export default class PeopleListItem extends React.Component {
     return <span>{person.name}</span>;
   }
 
+  handleCancelButtonOnClick = () => {
+    this.toggleEditMode();
+  };
+
+  handleEditButtonOnClick = () => {
+    const { handleEditedPersonNameOnChange, item: person } = this.props;
+
+    if (person.edited.name === "" || person.name !== person.edited.name) {
+      handleEditedPersonNameOnChange(person.name, person.uuid);
+    }
+
+    this.toggleEditMode();
+  };
+
+  handleSaveOnClick = () => {
+    const { handleEditedPersonOnSubmit, item: person } = this.props;
+
+    this.toggleEditMode();
+    handleEditedPersonOnSubmit(person.uuid);
+  };
+
   renderButtons() {
     const { editMode } = this.state;
 
@@ -54,25 +71,27 @@ export default class PeopleListItem extends React.Component {
     if (editMode) {
       // push buttons to list conditionally
       conditionalButtons.push(
-        <button
-          key="save"
-          // onClick={handleEditedPersonOnSubmit}
-        >
+        <button key="save" onClick={this.handleSaveOnClick}>
           Save
         </button>
       );
+
+      conditionalButtons.push(
+        <button key="cancel" onClick={this.handleCancelButtonOnClick}>
+          Cancel
+        </button>
+      );
     } else {
+      conditionalButtons.push(
+        <button key="edit" onClick={this.handleEditButtonOnClick}>
+          Edit
+        </button>
+      );
+
       conditionalButtons.push(<button key="delete">Delete</button>);
     }
 
-    return (
-      <div className="buttons-wrapper">
-        <button onClick={this.toggleEditMode}>
-          {this.state.editMode ? "Cancel" : "Edit"}
-        </button>
-        {conditionalButtons}
-      </div>
-    );
+    return <div className="buttons-wrapper">{conditionalButtons}</div>;
   }
 
   render() {

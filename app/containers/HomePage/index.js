@@ -8,7 +8,7 @@ import {
   makeSelectError,
   getPeople
 } from "containers/App/selectors";
-import { updatePerson } from "../App/actions";
+import { updateEditedPerson, updatePerson } from "../App/actions";
 // import { changeUsername } from "./actions";
 import { makeSelectUsername } from "./selectors";
 import reducer from "./reducer";
@@ -21,8 +21,18 @@ const mapDispatchToProps = dispatch => ({
   //   if (evt !== undefined && evt.preventDefault) evt.preventDefault();
   //   dispatch(loadRepos());
   // }
-  handleEditedPersonNameOnChange: (editedPerson, uuid) =>
-    dispatch(updatePerson(editedPerson, uuid))
+  handleEditedPersonNameOnChange: (editedName, uuid) =>
+    dispatch(
+      updateEditedPerson(
+        {
+          name: editedName
+        },
+        uuid
+      )
+    ),
+  handleEditedPersonOnSubmit: uuid => {
+    dispatch(updatePerson(uuid));
+  }
 });
 
 const mapStateToProps = createStructuredSelector({

@@ -6,7 +6,13 @@ import ListItem from "components/ListItem";
 import LoadingIndicator from "components/LoadingIndicator";
 import PeopleListItem from "containers/PeopleListItem";
 
-const PeopleList = ({ loading, error, people }) => {
+const PeopleList = ({
+  loading,
+  error,
+  people,
+  handleEditedPersonNameOnChange,
+  handleEditedPersonOnSubmit
+}) => {
   if (loading) {
     return <List component={LoadingIndicator} />;
   }
@@ -19,7 +25,16 @@ const PeopleList = ({ loading, error, people }) => {
   }
 
   if (people !== false) {
-    return <List items={people} component={PeopleListItem} />;
+    return (
+      <List
+        items={people}
+        component={PeopleListItem}
+        listItemProps={{
+          handleEditedPersonNameOnChange,
+          handleEditedPersonOnSubmit
+        }}
+      />
+    );
   }
 
   return null;
