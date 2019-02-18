@@ -30,7 +30,9 @@ export class AddPersonForm extends Component {
           onChange={this.handlePersonNameOnChange}
         />
         &nbsp;
-        <button type="submit">Submit</button>
+        <button type="submit" disabled={name.trim() === ""}>
+          Submit
+        </button>
       </form>
     );
   }

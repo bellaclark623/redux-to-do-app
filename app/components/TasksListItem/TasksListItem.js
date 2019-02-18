@@ -6,8 +6,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ListItem from "components/ListItem";
+import PeopleSelect from "components/PeopleSelect";
 import "./style.scss";
-import { select } from "redux-saga/effects";
 
 export default class TasksListItem extends React.Component {
   // eslint-disable-line react/prefer-stateless-function
@@ -25,7 +25,7 @@ export default class TasksListItem extends React.Component {
     // uuid
     const { people } = this.props;
     const foundPeople = people.filter(person => person.uuid === uuid);
-    return (foundPeople.length ? foundPeople : [{}])[0].name;
+    return (foundPeople.length ? foundPeople : [{}])[0].name || false;
   }
 
   renderName() {
@@ -33,7 +33,8 @@ export default class TasksListItem extends React.Component {
       item: task,
       handleEditedTaskLabelOnChange,
       people,
-      handleEditedTaskAssigneeOnChange
+      handleEditedTaskAssigneeOnChange,
+      handleTaskCompletedOnChange
     } = this.props;
     const { editMode } = this.state;
 
@@ -50,33 +51,27 @@ export default class TasksListItem extends React.Component {
               handleEditedTaskLabelOnChange(event.target.value, task.uuid)
             }
           />
-          <select
-            value={task.edited.assignee || -1}
-            onChange={event =>
-              handleEditedTaskAssigneeOnChange(event.target.value, task.uuid)
+          <PeopleSelect
+            onChange={e =>
+              handleEditedTaskAssigneeOnChange(e.target.value, task.uuid)
             }
-          >
-            <option value="-1" disabled>
-              Select an Assignee
-            </option>
-            {people.map(person => (
-              <option
-                name="task.edited.assignee"
-                value={person.uuid}
-                key={person.uuid}
-              >
-                {person.name}
-              </option>
-            ))}
-          </select>
+            items={people}
+            value={task.edited.assignee || -1}
+          />
         </form>
       );
     }
 
     return (
       <span>
+        <input
+          type="checkbox"
+          value={task.completed}
+          onChange={() => handleTaskCompletedOnChange(task.uuid)}
+        />
+        &nbsp;
         {task.label}
-        {task.assignee
+        {task.assignee && this.getPersonNameByUuid(task.assignee)
           ? ` - ${this.getPersonNameByUuid(task.assignee)}`
           : null}{" "}
       </span>
@@ -116,6 +111,7 @@ export default class TasksListItem extends React.Component {
   };
 
   renderButtons() {
+    const { item: task } = this.props;
     const { editMode } = this.state;
 
     const conditionalButtons = []; // create list of buttons that we will add
@@ -123,7 +119,11 @@ export default class TasksListItem extends React.Component {
     if (editMode) {
       // push buttons to list conditionally
       conditionalButtons.push(
-        <button key="save" onClick={this.handleSaveOnClick}>
+        <button
+          key="save"
+          onClick={this.handleSaveOnClick}
+          disabled={task.edited.label.trim() === ""}
+        >
           Save
         </button>
       );

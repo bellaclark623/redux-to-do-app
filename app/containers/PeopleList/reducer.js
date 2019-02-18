@@ -95,6 +95,11 @@ function peopleListReducer(state = initialState, action) {
         }),
         function(item) {
           const editedPerson = item.toJS().edited;
+
+          if (editedPerson.name.trim() === "") {
+            return item;
+          }
+
           const personUpdatedByEditedPerson = item.merge(editedPerson); // update their edited.name data
 
           return personUpdatedByEditedPerson;

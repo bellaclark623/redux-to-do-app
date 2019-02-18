@@ -1,7 +1,6 @@
 import { takeLatest } from "redux-saga";
 import { put } from "redux-saga/effects";
 import { DELETE_PERSON } from "./constants";
-// import { removeAssigneeFromTasks } from "../TasksList/actions";
 import { REMOVE_ASSIGNEE_FROM_TASKS } from "../TasksList/constants";
 
 export function* deleteAssigneesOnPersonDelete(action) {

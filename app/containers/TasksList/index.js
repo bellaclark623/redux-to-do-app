@@ -8,7 +8,12 @@ import saga from "./saga";
 import TasksList from "./TasksList";
 
 import { getTasks } from "containers/TasksList/selectors";
-import { updateTask, deleteTask, updateEditedTask } from "../TasksList/actions";
+import {
+  updateTask,
+  deleteTask,
+  updateEditedTask,
+  toggleTaskComplete
+} from "../TasksList/actions";
 import { getPeople } from "../PeopleList/selectors";
 
 const mapDispatchToProps = dispatch => ({
@@ -31,7 +36,8 @@ const mapDispatchToProps = dispatch => ({
         },
         uuid
       )
-    )
+    ),
+  handleTaskCompletedOnChange: uuid => dispatch(toggleTaskComplete(uuid))
 });
 
 const mapStateToProps = createStructuredSelector({

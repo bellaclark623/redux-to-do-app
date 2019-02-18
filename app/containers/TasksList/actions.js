@@ -2,7 +2,8 @@ import {
   DELETE_TASK,
   UPDATE_EDITED_TASK,
   UPDATE_TASK,
-  REMOVE_ASSIGNEE_FROM_TASKS
+  REMOVE_ASSIGNEE_FROM_TASKS,
+  TOGGLE_TASK_COMPLETE
 } from "./constants";
 
 export function deleteTask(uuid) {
@@ -36,6 +37,15 @@ export function updateEditedTask(edited, uuid) {
 export function updateTask(uuid) {
   return {
     type: UPDATE_TASK,
+    payload: {
+      uuid
+    }
+  };
+}
+
+export function toggleTaskComplete(uuid) {
+  return {
+    type: TOGGLE_TASK_COMPLETE,
     payload: {
       uuid
     }

@@ -6,7 +6,8 @@ import {
   UPDATE_TASK,
   DELETE_TASK,
   ADD_TASK,
-  REMOVE_ASSIGNEE_FROM_TASKS
+  REMOVE_ASSIGNEE_FROM_TASKS,
+  TOGGLE_TASK_COMPLETE
 } from "./constants";
 
 const initialState = fromJS({
@@ -81,12 +82,15 @@ const initialState = fromJS({
 });
 
 function appReducer(state = initialState, action) {
-  // James Bond
   switch (action.type) {
     case ADD_TASK: {
       const {
         payload: { newTask }
       } = action;
+
+      if (newTask.label.trim() === "") {
+        return state;
+      }
 
       const preparedNewTask = { ...newTask };
 
@@ -157,13 +161,51 @@ function appReducer(state = initialState, action) {
 
       const updatedTasks = tasks.update(
         tasks.findIndex(function(item) {
-          return item.get("uuid") === taskToUpdateUuid; // find the person in the List you want to update
+          return item.get("uuid") === taskToUpdateUuid; // find the task in the List you want to update
         }),
         function(item) {
           const editedTask = item.toJS().edited;
-          const taskUpdatedByEditedTask = item.merge(editedTask); // update their edited.name data
 
-          return taskUpdatedByEditedTask;
+          const triggerReturn = false;
+
+          Object.keys(editedTask).forEach(field => {
+            // Object.keys(editedTask) = ["label", "assignee"]
+            // field = "label" or "assignee"
+            if (editedTask[field].trim() === "") {
+              // editedTask[field]
+              // field = "label"
+              // editedTask = { label: "", assignee: "123jn12jk3n123kj" }
+              triggerReturn = true;
+            }
+          });
+
+          if (triggerReturn) {
+            return item;
+          }
+
+          return item.merge(editedTask);
+        }
+      );
+
+      return state
+        .set("loading", false)
+        .set("error", false)
+        .set("tasks", updatedTasks);
+    }
+
+    case TOGGLE_TASK_COMPLETE: {
+      const {
+        payload: { uuid: taskToUpdateUuid }
+      } = action;
+
+      const tasks = state.get("tasks");
+
+      const updatedTasks = tasks.update(
+        tasks.findIndex(function(item) {
+          return item.get("uuid") === taskToUpdateUuid; // find the task in the List you want to update
+        }),
+        function(item) {
+          return item.set("completed", !item.toJS().completed);
         }
       );
 

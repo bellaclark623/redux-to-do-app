@@ -71,13 +71,18 @@ export default class PeopleListItem extends React.Component {
 
   renderButtons() {
     const { editMode } = this.state;
+    const { item: person } = this.props;
 
     const conditionalButtons = []; // create list of buttons that we will add
 
     if (editMode) {
       // push buttons to list conditionally
       conditionalButtons.push(
-        <button key="save" onClick={this.handleSaveOnClick}>
+        <button
+          key="save"
+          onClick={this.handleSaveOnClick}
+          disabled={person.edited.name.trim() === ""}
+        >
           Save
         </button>
       );

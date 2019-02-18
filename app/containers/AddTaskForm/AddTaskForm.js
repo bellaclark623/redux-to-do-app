@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PeopleSelect from "../../components/PeopleSelect";
 
 export class AddTaskForm extends Component {
   state = {
@@ -39,21 +40,14 @@ export class AddTaskForm extends Component {
           value={label}
           onChange={this.handleNewTaskLabelOnChange}
         />
-        <select
-          name="newTask.assignee"
+        <PeopleSelect
           onChange={this.handleNewTaskAssigneeOnChange}
+          items={people}
           value={assignee || -1}
-        >
-          <option value={-1} disabled>
-            Select Assignee
-          </option>
-          {people.map(person => (
-            <option value={person.uuid} key={person.uuid}>
-              {person.name}
-            </option>
-          ))}
-        </select>
-        <button type="submit">Submit</button>
+        />
+        <button type="submit" disabled={label.trim() === ""}>
+          Submit
+        </button>
       </form>
     );
   }
