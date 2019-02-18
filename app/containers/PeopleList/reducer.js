@@ -1,9 +1,11 @@
 import { fromJS } from "immutable";
+import uuid from "uuid/v4";
 
 import {
   UPDATE_EDITED_PERSON,
   UPDATE_PERSON,
-  DELETE_PERSON
+  DELETE_PERSON,
+  ADD_PERSON
 } from "./constants";
 
 // The initial state of the App
@@ -57,6 +59,29 @@ function peopleListReducer(state = initialState, action) {
 
       return state.set("people", updatedPeople);
     }
+
+    case ADD_PERSON: {
+      const {
+        payload: { newPerson }
+      } = action;
+
+      const preparedNewPerson = { ...newPerson };
+
+      preparedNewPerson.uuid = uuid();
+
+      preparedNewPerson.createdOn = Date.now();
+
+      preparedNewPerson.edited = {
+        name: ""
+      };
+
+      const updatedPeople = state.update("people", peopleList =>
+        peopleList.push(fromJS(preparedNewPerson))
+      );
+
+      return state.merge(updatedPeople);
+    }
+
     case UPDATE_PERSON: {
       const {
         payload: { uuid: personToUpdateUuid }

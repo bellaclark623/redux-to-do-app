@@ -7,6 +7,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import ListItem from "components/ListItem";
 import "./style.scss";
+import { select } from "redux-saga/effects";
 
 export default class TasksListItem extends React.Component {
   // eslint-disable-line react/prefer-stateless-function
@@ -20,26 +21,66 @@ export default class TasksListItem extends React.Component {
     });
   };
 
+  getPersonNameByUuid(uuid) {
+    // uuid
+    const { people } = this.props;
+    const foundPeople = people.filter(person => person.uuid === uuid);
+    return (foundPeople.length ? foundPeople : [{}])[0].name;
+  }
+
   renderName() {
-    const { item: task, handleEditedTaskLabelOnChange } = this.props;
+    const {
+      item: task,
+      handleEditedTaskLabelOnChange,
+      people,
+      handleEditedTaskAssigneeOnChange
+    } = this.props;
     const { editMode } = this.state;
 
     if (editMode) {
+      console.log(task);
+
       return (
         <form>
           <input
             type="text"
-            name="task.label"
+            name="editedTask.edit.label"
             value={task.edited.label}
             onChange={event =>
               handleEditedTaskLabelOnChange(event.target.value, task.uuid)
             }
           />
+          <select
+            value={task.edited.assignee || -1}
+            onChange={event =>
+              handleEditedTaskAssigneeOnChange(event.target.value, task.uuid)
+            }
+          >
+            <option value="-1" disabled>
+              Select an Assignee
+            </option>
+            {people.map(person => (
+              <option
+                name="task.edited.assignee"
+                value={person.uuid}
+                key={person.uuid}
+              >
+                {person.name}
+              </option>
+            ))}
+          </select>
         </form>
       );
     }
 
-    return <span>{task.label}</span>;
+    return (
+      <span>
+        {task.label}
+        {task.assignee
+          ? ` - ${this.getPersonNameByUuid(task.assignee)}`
+          : null}{" "}
+      </span>
+    );
   }
 
   handleCancelButtonOnClick = () => {
@@ -47,10 +88,15 @@ export default class TasksListItem extends React.Component {
   };
 
   handleEditButtonOnClick = () => {
-    const { handleEditedTaskLabelOnChange, item: task } = this.props;
+    const {
+      handleEditedTaskLabelOnChange,
+      handleEditedTaskAssigneeOnChange,
+      item: task
+    } = this.props;
 
     if (task.edited.label === "" || task.label !== task.edited.label) {
       handleEditedTaskLabelOnChange(task.label, task.uuid);
+      handleEditedTaskAssigneeOnChange(task.assignee, task.uuid);
     }
 
     this.toggleEditMode();

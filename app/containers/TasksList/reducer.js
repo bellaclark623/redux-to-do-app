@@ -1,6 +1,13 @@
 import { fromJS } from "immutable";
+import uuid from "uuid/v4";
 
-import { UPDATE_EDITED_TASK, UPDATE_TASK, DELETE_TASK } from "./constants";
+import {
+  UPDATE_EDITED_TASK,
+  UPDATE_TASK,
+  DELETE_TASK,
+  ADD_TASK,
+  REMOVE_ASSIGNEE_FROM_TASKS
+} from "./constants";
 
 const initialState = fromJS({
   tasks: [
@@ -28,7 +35,7 @@ const initialState = fromJS({
     },
     {
       uuid: "cfd72878-f731-4f77-a427-810a6a6d2ffb",
-      label: "Task 2",
+      label: "Task 3",
       assignee: "31be11a2-5dbc-4ff1-8773-9e2462e96ec0",
       createdOn: 2,
       completed: false,
@@ -39,7 +46,7 @@ const initialState = fromJS({
     },
     {
       uuid: "565f1f92-21a1-4e16-8d55-d05184e5bf2b",
-      label: "Task 2",
+      label: "Task 4",
       assignee: "31be11a2-5dbc-4ff1-8773-9e2462e96ec0",
       createdOn: 2,
       completed: true,
@@ -50,7 +57,7 @@ const initialState = fromJS({
     },
     {
       uuid: "3adb26aa-d335-4a15-981e-d17f0cd27559",
-      label: "Task 2",
+      label: "Task 5",
       assignee: "31be11a2-5dbc-4ff1-8773-9e2462e96ec0",
       createdOn: 2,
       completed: false,
@@ -61,7 +68,7 @@ const initialState = fromJS({
     },
     {
       uuid: "79be1f61-e941-4d77-9634-3177949265aa",
-      label: "Task 2",
+      label: "Task 6",
       assignee: "31be11a2-5dbc-4ff1-8773-9e2462e96ec0",
       createdOn: 2,
       completed: false,
@@ -76,6 +83,49 @@ const initialState = fromJS({
 function appReducer(state = initialState, action) {
   // James Bond
   switch (action.type) {
+    case ADD_TASK: {
+      const {
+        payload: { newTask }
+      } = action;
+
+      const preparedNewTask = { ...newTask };
+
+      preparedNewTask.uuid = uuid();
+
+      preparedNewTask.createdOn = Date.now();
+
+      preparedNewTask.edited = {
+        label: "",
+        assignee: ""
+      };
+
+      const updatedTasks = state.update("tasks", tasksList =>
+        tasksList.push(fromJS(preparedNewTask))
+      );
+
+      return state.merge(updatedTasks);
+    }
+
+    case REMOVE_ASSIGNEE_FROM_TASKS: {
+      const {
+        payload: { uuid: taskToUpdateUuid }
+      } = action;
+
+      const tasks = state.get("tasks").toJS();
+
+      tasks
+        .filter(item => item.assignee === taskToUpdateUuid)
+        .map(task => {
+          task.assignee = "";
+          return task;
+        });
+
+      return state
+        .set("loading", false)
+        .set("error", false)
+        .set("tasks", fromJS(tasks));
+    }
+
     case UPDATE_EDITED_TASK: {
       const {
         payload: { uuid: taskToUpdateUuid, edited }
@@ -85,10 +135,10 @@ function appReducer(state = initialState, action) {
 
       const updatedTasks = tasks.update(
         tasks.findIndex(function(item) {
-          return item.get("uuid") === taskToUpdateUuid; // find the person in the List you want to update
+          return item.get("uuid") === taskToUpdateUuid; // find the task in the List you want to update
         }),
         function(item) {
-          return item.set("edited", edited); // update their edited.name data
+          return item.set("edited", item.get("edited").merge(edited)); // set edited to what edited it and merge something else
         }
       );
 

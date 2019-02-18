@@ -9,6 +9,7 @@ import TasksList from "./TasksList";
 
 import { getTasks } from "containers/TasksList/selectors";
 import { updateTask, deleteTask, updateEditedTask } from "../TasksList/actions";
+import { getPeople } from "../PeopleList/selectors";
 
 const mapDispatchToProps = dispatch => ({
   handleEditedTaskOnSubmit: uuid => dispatch(updateTask(uuid)),
@@ -21,11 +22,21 @@ const mapDispatchToProps = dispatch => ({
         },
         uuid
       )
+    ),
+  handleEditedTaskAssigneeOnChange: (editedAssignee, uuid) =>
+    dispatch(
+      updateEditedTask(
+        {
+          assignee: editedAssignee
+        },
+        uuid
+      )
     )
 });
 
 const mapStateToProps = createStructuredSelector({
-  tasks: getTasks()
+  tasks: getTasks(),
+  people: getPeople()
 });
 
 const withConnect = connect(

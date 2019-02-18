@@ -10,7 +10,8 @@ import { Helmet } from "react-helmet";
 import PeopleList from "containers/PeopleList";
 import TasksList from "containers/TasksList";
 import "./style.scss";
-// import AddPersonForm from "../../components/AddPersonForm";
+import AddPersonForm from "../../containers/AddPersonForm";
+import AddTaskForm from "../AddTaskForm";
 
 export default class HomePage extends React.PureComponent {
   render() {
@@ -27,11 +28,14 @@ export default class HomePage extends React.PureComponent {
           <section>
             <h3>Participants</h3>
             <PeopleList {...this.props} />
-            {/* <AddPersonForm {...this.props} /> */}
+            <h5>Add Participant</h5>
+            <AddPersonForm {...this.props} />
           </section>
           <section>
             <h3>Tasks</h3>
             <TasksList {...this.props} />
+            <h5>Add Task</h5>
+            <AddTaskForm {...this.props} />
           </section>
         </div>
       </article>

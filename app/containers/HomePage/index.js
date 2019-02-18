@@ -9,7 +9,7 @@ import reducer from "./reducer";
 import saga from "./saga";
 import HomePage from "./HomePage";
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = () => ({});
 
 const mapStateToProps = createStructuredSelector({
   loading: makeSelectLoading(),

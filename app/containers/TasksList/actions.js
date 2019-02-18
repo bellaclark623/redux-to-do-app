@@ -1,8 +1,22 @@
-import { DELETE_TASK, UPDATE_EDITED_TASK, UPDATE_TASK } from "./constants";
+import {
+  DELETE_TASK,
+  UPDATE_EDITED_TASK,
+  UPDATE_TASK,
+  REMOVE_ASSIGNEE_FROM_TASKS
+} from "./constants";
 
 export function deleteTask(uuid) {
   return {
     type: DELETE_TASK,
+    payload: {
+      uuid
+    }
+  };
+}
+
+export function removeAssigneeFromTasks(uuid) {
+  return {
+    type: REMOVE_ASSIGNEE_FROM_TASKS,
     payload: {
       uuid
     }
