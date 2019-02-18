@@ -27,6 +27,10 @@ export class AddTaskForm extends Component {
     console.log("TCL: AddTaskForm -> this", this);
     const { handleAddTaskOnSubmit } = this.props;
     handleAddTaskOnSubmit(this.state);
+    this.setState({
+      label: "",
+      assignee: ""
+    })
   };
 
   render() {

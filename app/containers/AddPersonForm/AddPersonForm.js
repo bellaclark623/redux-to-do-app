@@ -17,6 +17,9 @@ export class AddPersonForm extends Component {
     e.preventDefault();
     const { handleAddPersonOnSubmit } = this.props;
     handleAddPersonOnSubmit(this.state);
+    this.setState({
+      name: ""
+    })
   };
 
   render() {
